@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user::list</title>
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', function(){
+
+            const table = document.getElementsByTagName('table')[0];
+
+            // 토큰 가져오기
+            const accessToken = localStorage.getItem('accessToken');
+
+            // 데이터 요청
+            fetch('http://localhost:8080/ch09/user', {
+                method: 'GET',
+                headers: {'Authentication': `Bearer${accessToken}`}
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+
+                for(const user of data){
+
+                        const tr = `<tr>
+                                    <td>${user.usid}</td>
+                                    <td>${user.name}</td>
+                                    <td>${user.age}</td>
+                                    <td>${user.role}</td>
+                                    <td>${user.regDate}</td>
+                                    <td>
+                                        <a href='./modify.html?userid=${user.userid}' class='modify'>수정</a>
+                                        <a href='delete' class='delete' data-userid=${user.userid}>삭제</a>
+                                    </td>                        
+                                </tr>`;
+
+                        table.insertAdjacentHTML('beforeEnd', tr);                                          
+                }
+            });
+
+            // 동적태그 이벤트 처리
+            document.addEventListener('click', async function(e){
+                
+                
+                 // 삭제하기
+                if(e.target.classList == 'delete'){
+                    e.preventDefault(); 
+                    
+                    const userid = e.target.dataset.userid;
+
+                    const response = await fetch(`http://localhost:8080/ch08/user1/${userid}`,{
+                        method: 'DELETE'
+                    });
+
+                    const data = await response.json();
+
+                    if(data){
+                        alert('삭제했습니다! + ' + data);
+
+                        // 삭제한 목록 동적 처리
+                        e.target.closet('tr').remove();
+                    }
+                } 
+                            
+            });
+
+        });
+
+
+    </script>
+</head>
+<body>
+    <h3>User 목록</h3>
+
+    <a href="./register.html">등록</a>
+    
+    <table border="1">
+        <tr>
+            <th>아이디</th>
+            <th>이름</th>
+            <th>나이</th>
+            <th>권한</th>
+            <th>가입일</th>
+            <th>관리</th>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT User 실습</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+
+            const form = document.formLogin;
+
+            form.addEventListener('submit', function(e){
+                e.preventDefault();
+                
+                const jsonData = {
+                    "usid": form.usid.value,
+                    "pass": form.pass.value,
+                }
+
+                console.log(jsonData);
+
+                fetch('http://localhost:8080/ch09/user/login', {
+                    method: 'POST',
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(jsonData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+
+                    // 토큰 저장
+                    localStorage.setItem('accessToken', data.accessToken);
+                    localStorage.setItem('refreshToken', data.refreshToken);
+
+                    // 이동
+                    location.href = './index.html';
+                });
+            });
+        });
+
+
+    </script>
+
+</head>
+<body>
+    <h4>로그인</h4>
+    <form name="formLogin" method="post">
+        <input type="text" name="usid" placeholder="아이디 입력"/><br/>
+        <input type="password" name="pass" placeholder="비밀번호 입력"/><br/>
+        <input type="submit" value="로그인"/>
+    </form>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT User 실습</title>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+
+            const login = document.getElementById('login');
+            const logout = document.getElementById('logout');
+            const div = document.getElementsByTagName('div')[0];
+
+            // 로그인 여부 확인
+            const accessToken = localStorage.getItem('accessToken');
+            console.log(accessToken);
+
+            if(accessToken != null){
+                login.style.display = 'none';
+                div.style.display = 'block';
+            }else {
+                login.style.display = 'block';
+                div.style.display = 'none';
+            }
+            
+            // 로그아웃
+            logout.addEventListener('click', function(e){
+                e.preventDefault();
+
+                // 토큰 제거
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+
+                location.href = './index.html';
+            });
+        });
+
+
+    </script>
+
+
+</head>
+<body>
+    <h3>JWT User 실습</h3>
+
+
+    <a href="./login.html" id="login">로그인</a>
+    
+    <div>
+        <a href="logout" id="logout">로그아웃</a>
+        <a href="./list.html">User 목록</a>
+        <a href="./register.html">User 등록</a>
+    </div>
+
+    
+</body>
+</html>
